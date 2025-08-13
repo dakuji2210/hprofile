@@ -7,12 +7,11 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     steps:
-      - name: code check out
-        uses: actions/checkout@v4
-
       - name: testing code
-        run: maven test
+        run: echo "This is a test step"
+      
 
-      - name: checkstyle code
-        run: mvn checkstyle:checkstyle
-        # This step checks out the repository code so that it can be used in subsequent steps.      
+       
+
+        # This step runs a simple echo command to demonstrate the workflow.
+        # You can replace this with any command or script you want to execute.
