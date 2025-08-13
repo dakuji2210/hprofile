@@ -17,9 +17,9 @@ jobs:
         run: mvn checkstyle:checkstyle
         # This step checks out the repository code so that it can be used in subsequent steps.      
       - name: Java installation
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '11
           distribution: 'temurin'
           
       - name: setup sonar Qube
