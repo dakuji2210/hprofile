@@ -1,8 +1,12 @@
-name: github CICD
+name: githubcicd
 on: workflow_dispatch
-  jobs:
-      testing:
-      runs-on: ubuntu-latest
-        - name: testing the code
-        - run: echo "This is the finctionality test" 
+# This workflow is triggered by a manual dispatch event.
+# It can be used to run specific tasks on demand.
+# The workflow can be triggered from the GitHub Actions tab in the repository.  
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: testing code
+      - run: echo "This is a test run"
       
