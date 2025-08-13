@@ -1,0 +1,8 @@
+name: github CICD
+on: workflow_dispatch
+  jobs:
+      testing:
+      runs-on: ubuntu-latest
+        - name: testing the code
+        - run: echo "This is the finctionality test" 
+      
