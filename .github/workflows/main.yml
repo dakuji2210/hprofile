@@ -6,6 +6,10 @@ on: workflow_dispatch
 jobs:
   testing:
     runs-on: ubuntu-latest
+
+  env: 
+    SONAR_SCANNER_OPTS: "-Xmx1024m"  # Increase heap size to 1GB
+    
     steps:
       - name: code check out
         uses: actions/checkout@v4
