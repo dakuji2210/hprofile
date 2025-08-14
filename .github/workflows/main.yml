@@ -3,7 +3,7 @@ on: workflow_dispatch
 env: 
   ECR_REGISTRY: ${{ secrets.REGISTRY }}
   ECR_REGISTRY_REPO: ${{ secrets.REGISTRY_REPO }}
-  AWS_REGION: ${{ secrets.REGION }}  # Set your AWS region here
+  AWS_REGION: us-east-1  # Set your AWS region here
   ECS_CLUSTER: githubcicd-cluster  # Replace with your ECS cluster name
   ECS_SERVICE: githubcicd-task-def-service  # Replace with your ECS service name
   ECS_TASK_DEFINITION: aws-files/task-definition.json  # Replace with your ECS task definition file name
