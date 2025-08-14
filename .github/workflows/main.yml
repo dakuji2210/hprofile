@@ -55,7 +55,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
 
 
-  build_release:
+  build_Image_Upload_ecr:
     runs-on: ubuntu-latest
     needs: testing
     env:
