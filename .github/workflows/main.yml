@@ -53,3 +53,35 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
+
+  Build and release:
+    runs-on: ubuntu-latest
+    needs: testing
+    env:
+      AWS_REGION: us-east-1  # Set your AWS region here
+      
+      DB_PASS: ${{ secrets.DB_PASS }}  # Database password
+    steps:
+      - name: code check out
+        uses: actions/checkout@v4
+      - name: updating application.properties file 
+        run: |
+          sed -i "s/^jdbc.username.*$/jdbc.username\=${{ secrets.DB_USER }}/" src/main/resources/application.properties
+          sed -i "s/^jdbc.password.*$/jdbc.password\=${{ secrets.DB_PASS }}/" src/main/resources/application.properties
+          sed -i "s/db01/${{ secrets.DB_ENDPOINT }}/" src/main/resources/application.properties
+      - name: Build & Upload image to ECR
+        uses: appleboy/docker-ecr-action@master
+        with:
+         access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         registry: ${{ secrets.REGISTRY }}
+         repo: actapp
+         region: ${{ env.AWS_REGION }}
+         tags: latest,${{ github.run_number }}
+         daemon_off: false
+         dockerfile: ./Dockerfile
+         context: ./
+
+                   
+
+      
