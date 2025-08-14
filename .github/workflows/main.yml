@@ -1,14 +1,23 @@
 name: githubcicd
 on: workflow_dispatch
+env: 
+  ECR_REGISTRY: ${{ secrets.REGISTRY }}
+  ECR_REGISTRY_REPO: ${{ secrets.REGISTRY_REPO }}
+  AWS_REGION: ${{ secrets.REGION }}  # Set your AWS region here
+  ECS_CLUSTER: githubcicd-cluster  # Replace with your ECS cluster name
+  ECS_SERVICE: githubcicd-task-def-service  # Replace with your ECS service name
+  ECS_TASK_DEFINITION: aws-files/task-definition.json  # Replace with your ECS task definition file name
+  ECS_CONTAINER_NAME: himsancontain  # Replace with your ECS container name
+
 # This workflow is triggered by a manual dispatch event.
 # It can be used to run specific tasks on demand.
 # The workflow can be triggered from the GitHub Actions tab in the repository.  
 jobs:
   testing:
     runs-on: ubuntu-latest
-
-    env: 
-        SONAR_SCANNER_OPTS: "-Xmx1024m"  # Increase heap size to 1GB
+    env:
+      SONAR_SCANNER_OPTS: "-Xmx1024m"  # Increase heap size to 1GB
+    
 
     steps:
       - name: code check out
@@ -83,6 +92,29 @@ jobs:
          dockerfile: ./Dockerfile
          context: ./
 
-                   
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_Image_Upload_ecr
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         aws-region: ${{ env.AWS_REGION }}
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.ECS_CONTAINER_NAME }}
+          image: ${{ secrets.REGISTRY }}/${{ secrets.REGISTRY_REPO }}:${{ github.run_number }}
 
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true 
       
