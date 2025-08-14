@@ -6,7 +6,7 @@ env:
   AWS_REGION: us-east-1  # Set your AWS region here
   ECS_CLUSTER: githubcicd-cluster  # Replace with your ECS cluster name
   ECS_SERVICE: githubcicd-task-def-service  # Replace with your ECS service name
-  ECS_TASK_DEFINITION: aws-files/task-definition.json  # Replace with your ECS task definition file name
+  ECS_TASK_DEFINITION: aws-files/taskdeffile.json  # Replace with your ECS task definition file name
   ECS_CONTAINER_NAME: himsancontain  # Replace with your ECS container name
 
 # This workflow is triggered by a manual dispatch event.
